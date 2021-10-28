@@ -20,7 +20,7 @@ public class PlayerTest {
 
     @BeforeEach
     private void setUp() {
-        player = new Tank(new GridPoint2(5, 6), 90f, 0.4f, COLLISION_MANAGER);
+        player = new Tank(new GridPoint2(5, 6),0.4f, COLLISION_MANAGER, Direction.UP);
     }
 
     @Test

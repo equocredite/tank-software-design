@@ -5,6 +5,7 @@ import org.awesome.ai.Action;
 import org.awesome.ai.Recommendation;
 import org.awesome.ai.state.GameState;
 import org.awesome.ai.state.movable.Bot;
+import org.awesome.ai.state.movable.Orientation;
 import org.awesome.ai.state.movable.Player;
 import org.awesome.ai.state.immovable.Obstacle;
 
@@ -27,6 +28,16 @@ public class AwesomeAIAdapter implements CommandSource {
         this.gameState = buildGameState(player, bots, obstacles, levelWidth, levelHeight);
     }
 
+    private static Orientation directionToOrientation(Direction direction) {
+        switch (direction) {
+            case RIGHT: return Orientation.E;
+            case UP: return Orientation.N;
+            case LEFT: return Orientation.W;
+            case DOWN: return Orientation.S;
+            default: return null;
+        }
+    }
+
     private static Player tankToPlayer(Tank tank) {
         return Player.builder()
                 .source(tank)
@@ -34,6 +45,7 @@ public class AwesomeAIAdapter implements CommandSource {
                 .y(tank.getCoordinates().y)
                 .destX(tank.getDestinationCoordinates().x)
                 .destY(tank.getDestinationCoordinates().y)
+                .orientation(directionToOrientation(tank.getDirection()))
                 .build();
     }
 
@@ -44,6 +56,7 @@ public class AwesomeAIAdapter implements CommandSource {
                 .y(tank.getCoordinates().y)
                 .destX(tank.getDestinationCoordinates().x)
                 .destY(tank.getDestinationCoordinates().y)
+                .orientation(directionToOrientation(tank.getDirection()))
                 .build();
     }
 
@@ -71,19 +84,13 @@ public class AwesomeAIAdapter implements CommandSource {
     }
 
     private static Direction directionFromAction(Action action) {
-        if (action == Action.MoveEast) {
-            return Direction.RIGHT;
+        switch (action) {
+            case MoveEast: return Direction.RIGHT;
+            case MoveNorth: return Direction.UP;
+            case MoveWest: return Direction.LEFT;
+            case MoveSouth: return Direction.DOWN;
+            default: return null;
         }
-        if (action == Action.MoveNorth) {
-            return Direction.UP;
-        }
-        if (action == Action.MoveWest) {
-            return Direction.LEFT;
-        }
-        if (action == Action.MoveSouth) {
-            return Direction.DOWN;
-        }
-        return null;
     }
 
     private static Command commandFromRecommendation(Recommendation recommendation) {

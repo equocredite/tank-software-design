@@ -54,12 +54,12 @@ public class GameDesktopLauncher implements ApplicationListener {
     }
 
     private void createPlayer() {
-        player = new Tank(gameObjectMapLoader.getPlayerPosition(), 0, 0.4f, collisionManager);
+        player = new Tank(gameObjectMapLoader.getPlayerPosition(),0.4f, collisionManager);
     }
 
     private void createBots() {
         bots = gameObjectMapLoader.getBotPositions().stream()
-                .map(position -> new Tank(position, 0, 0.4f, collisionManager))
+                .map(position -> new Tank(position,0.4f, collisionManager))
                 .collect(Collectors.toList());
     }
 

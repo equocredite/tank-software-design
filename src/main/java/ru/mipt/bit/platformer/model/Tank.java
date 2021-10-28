@@ -7,26 +7,29 @@ import static com.badlogic.gdx.math.MathUtils.clamp;
 
 public class Tank {
     private final float movementSpeed;
-
     // player current position coordinates on level 10x8 grid (e.g. x=0, y=1)
     private final GridPoint2 coordinates;
     // which tile the player want to go next
     private GridPoint2 destinationCoordinates;
-    private float rotation;
+    private Direction direction;
     private float movementProgress = 1f;
 
     private final CollisionManager collisionManager;
 
-    public Tank(GridPoint2 coordinates, float rotation, float movementSpeed, CollisionManager collisionManager) {
+    public Tank(GridPoint2 coordinates, float movementSpeed, CollisionManager collisionManager, Direction direction) {
         this.coordinates = coordinates;
         this.destinationCoordinates = coordinates;
-        this.rotation = rotation;
         this.movementSpeed = movementSpeed;
         this.collisionManager = collisionManager;
+        this.direction = direction;
+    }
+
+    public Tank(GridPoint2 coordinates, float movementSpeed, CollisionManager collisionManager) {
+        this(coordinates, movementSpeed, collisionManager, Direction.RIGHT);
     }
 
     public float getRotation() {
-        return rotation;
+        return direction.getAngle();
     }
 
     public GridPoint2 getCoordinates() {
@@ -35,6 +38,10 @@ public class Tank {
 
     public GridPoint2 getDestinationCoordinates() {
         return destinationCoordinates;
+    }
+
+    public Direction getDirection() {
+        return direction;
     }
 
     public float getMovementProgress() {
@@ -51,11 +58,11 @@ public class Tank {
         }
     }
 
-    public void tryRotateAndStartMovement(Direction direction) {
+    public void tryRotateAndStartMovement(Direction newDirection) {
         if (isMoving()) {
             return;
         }
-        rotation = direction.getAngle();
+        direction = newDirection;
         var newDestination = direction.calcDestinationCoordinatesFrom(coordinates);
         if (collisionManager.canMove(this, newDestination)) {
             destinationCoordinates = newDestination;
