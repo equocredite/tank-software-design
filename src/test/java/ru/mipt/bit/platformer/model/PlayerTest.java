@@ -15,7 +15,7 @@ public class PlayerTest {
     private static final CollisionManager COLLISION_MANAGER = new CollisionManager(10, 10);
 
     static {
-        COLLISION_MANAGER.setObstacles(OBSTACLES);
+        COLLISION_MANAGER.addObstacles(OBSTACLES);
     }
 
     @BeforeEach

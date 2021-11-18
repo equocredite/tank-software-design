@@ -1,6 +1,5 @@
-package ru.mipt.bit.platformer.ai.commands;
+package ru.mipt.bit.platformer.controllers.commands;
 
-import ru.mipt.bit.platformer.ai.commands.Command;
 import ru.mipt.bit.platformer.model.Direction;
 import ru.mipt.bit.platformer.model.Tank;
 
@@ -15,6 +14,8 @@ public class MoveCommand implements Command {
 
     @Override
     public void execute() {
-        tank.tryRotateAndStartMovement(direction);
+        if (tank != null && direction != null) {
+            tank.tryRotateAndStartMovement(direction);
+        }
     }
 }

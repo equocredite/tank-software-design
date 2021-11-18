@@ -1,4 +1,4 @@
-package ru.mipt.bit.platformer.ai;
+package ru.mipt.bit.platformer.controllers.ai;
 
 import org.awesome.ai.AI;
 import org.awesome.ai.Action;
@@ -9,23 +9,24 @@ import org.awesome.ai.state.movable.Orientation;
 import org.awesome.ai.state.movable.Player;
 import org.awesome.ai.state.immovable.Obstacle;
 
-import ru.mipt.bit.platformer.ai.commands.Command;
-import ru.mipt.bit.platformer.ai.commands.MoveCommand;
-import ru.mipt.bit.platformer.ai.commands.NoopCommand;
+import ru.mipt.bit.platformer.controllers.Controller;
+import ru.mipt.bit.platformer.controllers.commands.Command;
+import ru.mipt.bit.platformer.controllers.commands.MoveCommand;
+import ru.mipt.bit.platformer.controllers.commands.NoopCommand;
 import ru.mipt.bit.platformer.model.Direction;
 import ru.mipt.bit.platformer.model.Tank;
+import ru.mipt.bit.platformer.physics.Level;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AwesomeAIAdapter implements CommandSource {
+public class AwesomeAIAdapter implements Controller {
     private final AI ai;
-    private final GameState gameState;
+    private final Level level;
 
-    public AwesomeAIAdapter(AI ai, Tank player, List<Tank> bots, List<ru.mipt.bit.platformer.model.Obstacle> obstacles,
-                            int levelWidth, int levelHeight) {
+    public AwesomeAIAdapter(AI ai, Level level) {
         this.ai = ai;
-        this.gameState = buildGameState(player, bots, obstacles, levelWidth, levelHeight);
+        this.level = level;
     }
 
     private static Orientation directionToOrientation(Direction direction) {
@@ -64,22 +65,20 @@ public class AwesomeAIAdapter implements CommandSource {
         return new Obstacle(obstacle.getCoordinates().x, obstacle.getCoordinates().y);
     }
 
-    private static GameState buildGameState(Tank player, List<Tank> bots,
-                                            List<ru.mipt.bit.platformer.model.Obstacle> obstacles,
-                                            int levelWidth, int levelHeight) {
-        var _player = tankToPlayer(player);
-        var _bots = bots.stream()
+    private GameState buildGameState() {
+        var player = tankToPlayer(level.getPlayer());
+        var bots = level.getBots().stream()
                 .map(AwesomeAIAdapter::tankToBot)
                 .collect(Collectors.toList());
-        var _obstacles = obstacles.stream()
+        var obstacles = level.getObstacles().stream()
                 .map(AwesomeAIAdapter::obstacleToObstacle)
                 .collect(Collectors.toList());
         return GameState.builder()
-                .obstacles(_obstacles)
-                .bots(_bots)
-                .player(_player)
-                .levelWidth(levelWidth)
-                .levelHeight(levelHeight)
+                .obstacles(obstacles)
+                .bots(bots)
+                .player(player)
+                .levelWidth(level.getWidth())
+                .levelHeight(level.getHeight())
                 .build();
     }
 
@@ -97,13 +96,14 @@ public class AwesomeAIAdapter implements CommandSource {
         Tank tank = (Tank) recommendation.getActor().getSource();
         Direction direction = directionFromAction(recommendation.getAction());
         if (direction == null) {
-            return new NoopCommand();
+            return NoopCommand.INSTANCE;
         }
         return new MoveCommand(tank, direction);
     }
 
     @Override
     public List<Command> getCommands() {
+        var gameState = buildGameState();
         return ai.recommend(gameState).stream()
                 .map(AwesomeAIAdapter::commandFromRecommendation)
                 .collect(Collectors.toList());

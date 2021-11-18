@@ -4,12 +4,13 @@ import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class CollisionManager {
-    private List<Obstacle> obstacles = Collections.emptyList();
-    private List<Tank> tanks = Collections.emptyList();
+    private final List<Obstacle> obstacles = new ArrayList<>();
+    private final List<Tank> tanks = new ArrayList<>();
     private final int mapHeight;
     private final int mapWidth;
 
@@ -18,12 +19,16 @@ public class CollisionManager {
         this.mapWidth = mapWidth;
     }
 
-    public void setObstacles(List<Obstacle> obstacles) {
-        this.obstacles = obstacles;
+    public void addTank(Tank tank) {
+        tanks.add(tank);
     }
 
-    public void setTanks(List<Tank> tanks) {
-        this.tanks = tanks;
+    public void addTanks(Collection<Tank> tanks) {
+        this.tanks.addAll(tanks);
+    }
+
+    public void addObstacles(Collection<Obstacle> obstacles) {
+        this.obstacles.addAll(obstacles);
     }
 
     private boolean isLegalMapPosition(GridPoint2 point) {
