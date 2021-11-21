@@ -17,7 +17,7 @@ import ru.mipt.bit.platformer.graphics.ObstacleGraphics;
 import ru.mipt.bit.platformer.graphics.TankGraphics;
 import ru.mipt.bit.platformer.physics.Level;
 import ru.mipt.bit.platformer.util.TileMovement;
-import ru.mipt.bit.platformer.loaders.*;
+import ru.mipt.bit.platformer.generators.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 public class GameDesktopLauncher implements ApplicationListener {
-    private final GameObjectMapLoader gameObjectMapLoader;
+    private final LevelGenerator levelGenerator;
 
     private CommandExecutor commandExecutor;
     private Level level;
@@ -35,12 +35,12 @@ public class GameDesktopLauncher implements ApplicationListener {
         Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
         // level width: 10 tiles x 128px, height: 8 tiles x 128px
         config.setWindowedMode(1280, 1024);
-        var gameDesktopLauncher = new GameDesktopLauncher(new GameObjectMapFileLoader(8, 10, "/gameObjectMap"));
+        var gameDesktopLauncher = new GameDesktopLauncher(new LevelFileLoader(8, 10, "/gameObjectMap"));
         new Lwjgl3Application(gameDesktopLauncher, config);
     }
 
-    public GameDesktopLauncher(GameObjectMapLoader gameObjectMapLoader) {
-        this.gameObjectMapLoader = gameObjectMapLoader;
+    public GameDesktopLauncher(LevelGenerator levelGenerator) {
+        this.levelGenerator = levelGenerator;
     }
 
     @Override
@@ -48,7 +48,11 @@ public class GameDesktopLauncher implements ApplicationListener {
         TiledMap map = new TmxMapLoader().load("level.tmx");
         TiledMapTileLayer tileLayer = getSingleLayer(map);
 
-        level = new Level(gameObjectMapLoader, tileLayer.getHeight(), tileLayer.getWidth());
+        try {
+            level = levelGenerator.generateLevel();
+        } catch (MapGenerationException e) {
+            e.printStackTrace();
+        }
 
         var playerController = new PlayerKeyboardController(level.getPlayer());
         var botController = new RandomAIController(level.getBots());

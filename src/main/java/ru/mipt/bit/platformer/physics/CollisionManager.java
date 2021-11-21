@@ -27,6 +27,10 @@ public class CollisionManager {
         this.tanks.addAll(tanks);
     }
 
+    public void addObstacle(Obstacle obstacle) {
+        obstacles.add(obstacle);
+    }
+
     public void addObstacles(Collection<Obstacle> obstacles) {
         this.obstacles.addAll(obstacles);
     }
