@@ -52,7 +52,7 @@ public class Bullet {
         }
         var tank = collisionManager.findCollidingTank(coordinates);
         if (tank != null) {
-            tank.takeDamage(damage);
+            tank.takeDamage();
             return true;
         }
         return false;

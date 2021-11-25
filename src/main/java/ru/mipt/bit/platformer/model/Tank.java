@@ -1,14 +1,16 @@
 package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.model.states.LightTankState;
+import ru.mipt.bit.platformer.model.states.TankState;
 import ru.mipt.bit.platformer.physics.Level;
 
 import static com.badlogic.gdx.math.MathUtils.clamp;
 
 public class Tank {
-    private int health = 2;
+    private TankState state;
 
-    private final float movementSpeed;
+    private final float baseMovementSpeed;
     // player current position coordinates on level 10x8 grid (e.g. x=0, y=1)
     private final GridPoint2 coordinates;
     // which tile the player want to go next
@@ -18,35 +20,33 @@ public class Tank {
 
     private final Level level;
 
-    public Tank(GridPoint2 coordinates, float movementSpeed, Direction direction, Level level) {
+    public Tank(GridPoint2 coordinates, float baseMovementSpeed, Direction direction, Level level) {
+        this.state = new LightTankState(this, level);
         this.coordinates = coordinates;
         this.destinationCoordinates = coordinates;
-        this.movementSpeed = movementSpeed;
+        this.baseMovementSpeed = baseMovementSpeed;
         this.direction = direction;
         this.level = level;
     }
 
-    public Tank(GridPoint2 coordinates, float movementSpeed, Level level) {
-        this(coordinates, movementSpeed, Direction.RIGHT, level);
+    public void setState(TankState state) {
+        this.state = state;
     }
 
-    public int getHealth() {
-        return health;
+    public Tank(GridPoint2 coordinates, float baseMovementSpeed, Level level) {
+        this(coordinates, baseMovementSpeed, Direction.RIGHT, level);
     }
 
-    public boolean isDead() {
-        return health <= 0;
+    public float getBaseMovementSpeed() {
+        return baseMovementSpeed;
     }
 
-    public void takeDamage(int damage) {
-        health -= damage;
-        if (health <= 0) {
-            level.removeTank(this);
-        }
+    public void takeDamage() {
+        state.takeDamage();
     }
 
     public void shoot() {
-        level.addBullet(new Bullet(coordinates, direction, level));
+        state.shoot();
     }
 
     public float getRotation() {
@@ -67,6 +67,10 @@ public class Tank {
 
     public float getMovementProgress() {
         return movementProgress;
+    }
+
+    public void setMovementProgress(float movementProgress) {
+        this.movementProgress = movementProgress;
     }
 
     public boolean isMoving() {
@@ -92,7 +96,7 @@ public class Tank {
     }
 
     public void tick(float deltaTime) {
-        movementProgress = clamp(movementProgress + deltaTime / movementSpeed, 0f, 1f);
+        state.makeProgress(deltaTime);
         tryFinishMovement();
     }
 }
