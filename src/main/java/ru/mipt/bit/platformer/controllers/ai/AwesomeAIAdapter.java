@@ -12,7 +12,7 @@ import org.awesome.ai.state.immovable.Obstacle;
 import ru.mipt.bit.platformer.controllers.Controller;
 import ru.mipt.bit.platformer.controllers.commands.Command;
 import ru.mipt.bit.platformer.controllers.commands.MoveCommand;
-import ru.mipt.bit.platformer.controllers.commands.NoopCommand;
+import ru.mipt.bit.platformer.controllers.commands.ShootCommand;
 import ru.mipt.bit.platformer.model.Direction;
 import ru.mipt.bit.platformer.model.Tank;
 import ru.mipt.bit.platformer.physics.Level;
@@ -88,16 +88,17 @@ public class AwesomeAIAdapter implements Controller {
             case MoveNorth: return Direction.UP;
             case MoveWest: return Direction.LEFT;
             case MoveSouth: return Direction.DOWN;
-            default: return null;
         }
+        throw new IllegalArgumentException("not a movement action");
     }
 
     private static Command commandFromRecommendation(Recommendation recommendation) {
         Tank tank = (Tank) recommendation.getActor().getSource();
-        Direction direction = directionFromAction(recommendation.getAction());
-        if (direction == null) {
-            return NoopCommand.INSTANCE;
+        var action = recommendation.getAction();
+        if (action == Action.Shoot) {
+            return new ShootCommand(tank);
         }
+        Direction direction = directionFromAction(action);
         return new MoveCommand(tank, direction);
     }
 

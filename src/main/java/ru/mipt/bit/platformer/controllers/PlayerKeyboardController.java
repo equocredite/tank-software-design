@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input;
 import ru.mipt.bit.platformer.controllers.commands.Command;
 import ru.mipt.bit.platformer.controllers.commands.MoveCommand;
 import ru.mipt.bit.platformer.controllers.commands.NoopCommand;
+import ru.mipt.bit.platformer.controllers.commands.ShootCommand;
 import ru.mipt.bit.platformer.input.KeyboardListener;
 import ru.mipt.bit.platformer.model.Direction;
 import ru.mipt.bit.platformer.model.Tank;
@@ -39,6 +40,9 @@ public class PlayerKeyboardController implements Controller {
         }
         if (key == Input.Keys.DOWN || key == Input.Keys.S) {
             return new MoveCommand(player, Direction.DOWN);
+        }
+        if (key == Input.Keys.SPACE) {
+            return new ShootCommand(player);
         }
         throw new IllegalArgumentException();
     }

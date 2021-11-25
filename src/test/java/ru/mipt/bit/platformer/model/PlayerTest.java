@@ -3,7 +3,7 @@ package ru.mipt.bit.platformer.model;
 import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.mipt.bit.platformer.physics.CollisionManager;
+import ru.mipt.bit.platformer.physics.Level;
 
 import java.util.List;
 
@@ -12,15 +12,15 @@ import static org.junit.jupiter.api.Assertions.*;
 public class PlayerTest {
     private Tank player;
     private static final List<Obstacle> OBSTACLES = List.of(new Obstacle(new GridPoint2(6, 6)));
-    private static final CollisionManager COLLISION_MANAGER = new CollisionManager(10, 10);
+    private static final Level LEVEL = new Level(10, 10);
 
     static {
-        COLLISION_MANAGER.addObstacles(OBSTACLES);
+        LEVEL.getObstacles().addAll(OBSTACLES);
     }
 
     @BeforeEach
     private void setUp() {
-        player = new Tank(new GridPoint2(5, 6),0.4f, COLLISION_MANAGER, Direction.UP);
+        player = new Tank(new GridPoint2(5, 6),0.4f, Direction.UP, LEVEL);
     }
 
     @Test
@@ -35,7 +35,7 @@ public class PlayerTest {
             var destination = path.get(i);
             var direction = directions.get(i);
             player.tryRotateAndStartMovement(direction);
-            player.makeProgress(1f);
+            player.tick(1f);
             assertEquals(player.getCoordinates(), path.get(i));
         }
     }

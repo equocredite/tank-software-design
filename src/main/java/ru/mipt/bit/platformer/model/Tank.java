@@ -1,11 +1,13 @@
 package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
-import ru.mipt.bit.platformer.physics.CollisionManager;
+import ru.mipt.bit.platformer.physics.Level;
 
 import static com.badlogic.gdx.math.MathUtils.clamp;
 
 public class Tank {
+    private int health = 2;
+
     private final float movementSpeed;
     // player current position coordinates on level 10x8 grid (e.g. x=0, y=1)
     private final GridPoint2 coordinates;
@@ -14,18 +16,37 @@ public class Tank {
     private Direction direction;
     private float movementProgress = 1f;
 
-    private final CollisionManager collisionManager;
+    private final Level level;
 
-    public Tank(GridPoint2 coordinates, float movementSpeed, CollisionManager collisionManager, Direction direction) {
+    public Tank(GridPoint2 coordinates, float movementSpeed, Direction direction, Level level) {
         this.coordinates = coordinates;
         this.destinationCoordinates = coordinates;
         this.movementSpeed = movementSpeed;
-        this.collisionManager = collisionManager;
         this.direction = direction;
+        this.level = level;
     }
 
-    public Tank(GridPoint2 coordinates, float movementSpeed, CollisionManager collisionManager) {
-        this(coordinates, movementSpeed, collisionManager, Direction.RIGHT);
+    public Tank(GridPoint2 coordinates, float movementSpeed, Level level) {
+        this(coordinates, movementSpeed, Direction.RIGHT, level);
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public boolean isDead() {
+        return health <= 0;
+    }
+
+    public void takeDamage(int damage) {
+        health -= damage;
+        if (health <= 0) {
+            level.removeTank(this);
+        }
+    }
+
+    public void shoot() {
+        level.addBullet(new Bullet(coordinates, direction, level));
     }
 
     public float getRotation() {
@@ -64,13 +85,13 @@ public class Tank {
         }
         direction = newDirection;
         var newDestination = direction.calcDestinationCoordinatesFrom(coordinates);
-        if (collisionManager.canMove(this, newDestination)) {
+        if (level.getCollisionManager().canMove(this, newDestination)) {
             destinationCoordinates = newDestination;
             movementProgress = 0f;
         }
     }
 
-    public void makeProgress(float deltaTime) {
+    public void tick(float deltaTime) {
         movementProgress = clamp(movementProgress + deltaTime / movementSpeed, 0f, 1f);
         tryFinishMovement();
     }

@@ -18,7 +18,7 @@ public class RandomLevelGeneratorTest {
             "15, 10, 0, 1",
             "15, 10, 20, 2"
     })
-    public void testGenerate(int height, int width, int nTrees, int nBots) {
+    public void testGenerate(int height, int width, int nTrees, int nBots) throws MapGenerationException {
         Function<GridPoint2, Boolean> checkPositionCorrectness = (GridPoint2 point) -> {
             return 0 <= point.x && point.x < width && 0 <= point.y && point.y < height;
         };

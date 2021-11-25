@@ -1,9 +1,9 @@
 package ru.mipt.bit.platformer.generators;
 
 import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.events.SubscriptionRequest;
 import ru.mipt.bit.platformer.model.Obstacle;
 import ru.mipt.bit.platformer.model.Tank;
-import ru.mipt.bit.platformer.physics.CollisionManager;
 import ru.mipt.bit.platformer.physics.Level;
 
 import java.util.HashSet;
@@ -20,9 +20,9 @@ public class RandomLevelGenerator implements LevelGenerator {
     private final int nObstacles;
     private final int nBots;
 
-    private final Set<GridPoint2> occupiedPositions = new HashSet<>();
-    private final CollisionManager collisionManager;
+    private final Level level;
 
+    private final Set<GridPoint2> occupiedPositions = new HashSet<>();
     public RandomLevelGenerator(int height, int width, int nObstacles, int nBots) {
         if (height * width < nObstacles + nBots + 1) {
             throw new IllegalArgumentException("too many objects");
@@ -31,21 +31,16 @@ public class RandomLevelGenerator implements LevelGenerator {
         this.width = width;
         this.nObstacles = nObstacles;
         this.nBots = nBots;
-        this.collisionManager = new CollisionManager(height, width);
+        this.level = new Level(height, width);
     }
 
     @Override
-    public Level generateLevel() {
-        var player = generateTank();
-        collisionManager.addTank(player);
-
-        var bots = generateNObjects(this::generateTank, nBots);
-        collisionManager.addTanks(bots);
-
-        var obstacles = generateNObjects(this::generateObstacle, nObstacles);
-        collisionManager.addObstacles(obstacles);
-
-        return new Level(player, bots, obstacles, height, width);
+    public Level generateLevel(List<SubscriptionRequest> initialSubscriptionRequests) {
+        level.subscribeAll(initialSubscriptionRequests);
+        level.setPlayer(generateTank());
+        level.addBots(generateNObjects(this::generateTank, nBots));
+        level.addObstacles(generateNObjects(this::generateObstacle, nObstacles));
+        return level;
     }
 
     private <T> List<T> generateNObjects(Supplier<? extends T> supplier, int n) {
@@ -55,7 +50,7 @@ public class RandomLevelGenerator implements LevelGenerator {
     }
 
     private Tank generateTank() {
-        return new Tank(generateRandomEmptyPosition(),0.4f, collisionManager);
+        return new Tank(generateRandomEmptyPosition(),0.4f, level);
     }
 
     private Obstacle generateObstacle() {

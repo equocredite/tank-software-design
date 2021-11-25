@@ -3,12 +3,12 @@ package ru.mipt.bit.platformer.controllers.ai;
 import ru.mipt.bit.platformer.controllers.Controller;
 import ru.mipt.bit.platformer.controllers.commands.Command;
 import ru.mipt.bit.platformer.controllers.commands.MoveCommand;
+import ru.mipt.bit.platformer.controllers.commands.ShootCommand;
 import ru.mipt.bit.platformer.model.Direction;
 import ru.mipt.bit.platformer.model.Tank;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomAIController implements Controller {
@@ -22,17 +22,17 @@ public class RandomAIController implements Controller {
     public List<Command> getCommands() {
         List<Command> commands = new ArrayList<>();
         for (var bot : bots) {
-            commands.add(new MoveCommand(bot, randomDirection()));
+            commands.add(generateRandomCommand(bot));
         }
         return commands;
     }
 
-    public static Direction randomDirection(Random rng) {
-        var values = Direction.values();
-        return values[rng.nextInt(values.length)];
-    }
-
-    public static Direction randomDirection() {
-        return randomDirection(ThreadLocalRandom.current());
+    private static Command generateRandomCommand(Tank tank) {
+        var directions = Direction.values();
+        int commandId = ThreadLocalRandom.current().nextInt(directions.length + 1);
+        if (commandId < directions.length) {
+            return new MoveCommand(tank, directions[commandId]);
+        }
+        return new ShootCommand(tank);
     }
 }

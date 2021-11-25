@@ -12,15 +12,16 @@ import com.badlogic.gdx.math.Interpolation;
 import ru.mipt.bit.platformer.controllers.CommandExecutor;
 import ru.mipt.bit.platformer.controllers.ai.RandomAIController;
 import ru.mipt.bit.platformer.controllers.PlayerKeyboardController;
+import ru.mipt.bit.platformer.events.EventType;
+import ru.mipt.bit.platformer.events.SubscriptionRequest;
 import ru.mipt.bit.platformer.graphics.LevelRenderer;
-import ru.mipt.bit.platformer.graphics.ObstacleGraphics;
-import ru.mipt.bit.platformer.graphics.TankGraphics;
 import ru.mipt.bit.platformer.physics.Level;
 import ru.mipt.bit.platformer.util.TileMovement;
 import ru.mipt.bit.platformer.generators.*;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
@@ -47,9 +48,20 @@ public class GameDesktopLauncher implements ApplicationListener {
     public void create() {
         TiledMap map = new TmxMapLoader().load("level.tmx");
         TiledMapTileLayer tileLayer = getSingleLayer(map);
+        var tileMovement = new TileMovement(tileLayer, Interpolation.smooth);
+
+        var tankTexture = new Texture("images/tank_blue.png");
+        var obstacleTexture = new Texture("images/greenTree.png");
+        var bulletTexture = new Texture("images/bullet.png");
+
+        levelRenderer = new LevelRenderer(map, tileMovement, tileLayer, tankTexture, obstacleTexture, bulletTexture);
+
+        var initialSubscriptionRequests = Arrays.stream(EventType.values())
+                .map(eventType -> new SubscriptionRequest(eventType, levelRenderer))
+                .collect(Collectors.toList());
 
         try {
-            level = levelGenerator.generateLevel();
+            level = levelGenerator.generateLevel(initialSubscriptionRequests);
         } catch (MapGenerationException e) {
             e.printStackTrace();
         }
@@ -59,17 +71,6 @@ public class GameDesktopLauncher implements ApplicationListener {
         commandExecutor = new CommandExecutor(List.of(
                 playerController, botController
         ));
-
-        var tileMovement = new TileMovement(tileLayer, Interpolation.smooth);
-
-        List<TankGraphics> tankGraphics = new ArrayList<>();
-        tankGraphics.add(new TankGraphics(new Texture("images/tank_blue.png"), level.getPlayer(), tileMovement));
-        for (var bot : level.getBots()) {
-            tankGraphics.add(new TankGraphics(new Texture("images/tank_blue.png"), bot, tileMovement));
-        }
-        ObstacleGraphics obstacleGraphics = new ObstacleGraphics(new Texture("images/greenTree.png"),
-                level.getObstacles(), tileLayer);
-        levelRenderer = new LevelRenderer(map, tankGraphics, obstacleGraphics);
     }
 
     @Override

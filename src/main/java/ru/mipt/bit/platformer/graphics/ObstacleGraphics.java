@@ -16,19 +16,21 @@ import static ru.mipt.bit.platformer.util.GdxGameUtils.drawTextureRegionUnscaled
 import static ru.mipt.bit.platformer.util.GdxGameUtils.moveRectangleAtTileCenter;
 
 public class ObstacleGraphics implements Disposable {
+    private final TiledMapTileLayer tileLayer;
     private final TextureRegion region;
-    private final List<Rectangle> rectangles;
-    private final List<Obstacle> obstacles;
+    private final List<Rectangle> rectangles = new ArrayList<>();
+    private final List<Obstacle> obstacles = new ArrayList<>();
 
-    public ObstacleGraphics(Texture texture, List<Obstacle> obstacles, TiledMapTileLayer tileLayer) {
+    public ObstacleGraphics(Texture texture, TiledMapTileLayer tileLayer) {
+        this.tileLayer = tileLayer;
         this.region = new TextureRegion(texture);
-        this.obstacles = obstacles;
-        rectangles = new ArrayList<>();
-        for (Obstacle obstacle : obstacles) {
-            Rectangle rectangle = createBoundingRectangle(region);
-            rectangles.add(rectangle);
-            moveRectangleAtTileCenter(tileLayer, rectangle, obstacle.getCoordinates());
-        }
+    }
+
+    public void addObstacle(Obstacle obstacle) {
+        obstacles.add(obstacle);
+        Rectangle rectangle = createBoundingRectangle(region);
+        rectangles.add(rectangle);
+        moveRectangleAtTileCenter(tileLayer, rectangle, obstacle.getCoordinates());
     }
 
     @Override
