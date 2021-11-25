@@ -15,6 +15,7 @@ import ru.mipt.bit.platformer.controllers.PlayerKeyboardController;
 import ru.mipt.bit.platformer.events.EventType;
 import ru.mipt.bit.platformer.events.SubscriptionRequest;
 import ru.mipt.bit.platformer.graphics.LevelRenderer;
+import ru.mipt.bit.platformer.graphics.ToggleListener;
 import ru.mipt.bit.platformer.physics.Level;
 import ru.mipt.bit.platformer.util.TileMovement;
 import ru.mipt.bit.platformer.generators.*;
@@ -54,7 +55,10 @@ public class GameDesktopLauncher implements ApplicationListener {
         var obstacleTexture = new Texture("images/greenTree.png");
         var bulletTexture = new Texture("images/bullet.png");
 
-        levelRenderer = new LevelRenderer(map, tileMovement, tileLayer, tankTexture, obstacleTexture, bulletTexture);
+        var toggleListener = new ToggleListener();
+
+        levelRenderer = new LevelRenderer(map, tileMovement, tileLayer, tankTexture, obstacleTexture, bulletTexture,
+                toggleListener);
 
         var initialSubscriptionRequests = Arrays.stream(EventType.values())
                 .map(eventType -> new SubscriptionRequest(eventType, levelRenderer))
@@ -66,7 +70,7 @@ public class GameDesktopLauncher implements ApplicationListener {
             e.printStackTrace();
         }
 
-        var playerController = new PlayerKeyboardController(level.getPlayer());
+        var playerController = new PlayerKeyboardController(level.getPlayer(), toggleListener);
         var botController = new RandomAIController(level.getBots());
         commandExecutor = new CommandExecutor(List.of(
                 playerController, botController

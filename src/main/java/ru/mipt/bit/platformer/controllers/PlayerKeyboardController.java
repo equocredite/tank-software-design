@@ -1,10 +1,8 @@
 package ru.mipt.bit.platformer.controllers;
 
 import com.badlogic.gdx.Input;
-import ru.mipt.bit.platformer.controllers.commands.Command;
-import ru.mipt.bit.platformer.controllers.commands.MoveCommand;
-import ru.mipt.bit.platformer.controllers.commands.NoopCommand;
-import ru.mipt.bit.platformer.controllers.commands.ShootCommand;
+import ru.mipt.bit.platformer.controllers.commands.*;
+import ru.mipt.bit.platformer.graphics.ToggleListener;
 import ru.mipt.bit.platformer.input.KeyboardListener;
 import ru.mipt.bit.platformer.model.Direction;
 import ru.mipt.bit.platformer.model.Tank;
@@ -13,9 +11,11 @@ import java.util.List;
 
 public class PlayerKeyboardController implements Controller {
     private final Tank player;
+    private final ToggleListener toggleListener;
 
-    public PlayerKeyboardController(Tank player) {
+    public PlayerKeyboardController(Tank player, ToggleListener toggleListener) {
         this.player = player;
+        this.toggleListener = toggleListener;
     }
 
     @Override
@@ -43,6 +43,9 @@ public class PlayerKeyboardController implements Controller {
         }
         if (key == Input.Keys.SPACE) {
             return new ShootCommand(player);
+        }
+        if (key == Input.Keys.L) {
+            return new ToggleCommand(toggleListener);
         }
         throw new IllegalArgumentException();
     }

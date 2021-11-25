@@ -35,8 +35,10 @@ public class LevelRenderer implements Subscriber, Disposable {
     private final ObstacleGraphics obstacleGraphics;
     private final List<BulletGraphics> bulletGraphics = new ArrayList<>();
 
+    private final ToggleListener toggleListener;
+
     public LevelRenderer(TiledMap map, TileMovement tileMovement, TiledMapTileLayer tileLayer, Texture tankTexture,
-                         Texture obstacleTexture, Texture bulletTexture) {
+                         Texture obstacleTexture, Texture bulletTexture, ToggleListener toggleListener) {
         this.batch = new SpriteBatch();
         this.map = map;
         this.mapRenderer = createSingleLayerMapRenderer(map, batch);
@@ -47,6 +49,8 @@ public class LevelRenderer implements Subscriber, Disposable {
         this.bulletTexture = bulletTexture;
 
         this.obstacleGraphics = new ObstacleGraphics(obstacleTexture, tileLayer);
+
+        this.toggleListener = toggleListener;
     }
 
     public void render() {

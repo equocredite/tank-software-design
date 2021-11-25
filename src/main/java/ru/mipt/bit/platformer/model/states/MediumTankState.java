@@ -7,6 +7,8 @@ import ru.mipt.bit.platformer.physics.Level;
 import static com.badlogic.gdx.math.MathUtils.clamp;
 
 public class MediumTankState implements TankState {
+    private static final int HEALTH = 2;
+
     private final Tank tank;
     private final Level level;
 
@@ -28,5 +30,10 @@ public class MediumTankState implements TankState {
 
     public void takeDamage() {
         tank.setState(new HeavyTankState(tank, level));
+    }
+
+    @Override
+    public int getHealth() {
+        return HEALTH;
     }
 }

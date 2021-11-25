@@ -5,9 +5,7 @@ import ru.mipt.bit.platformer.model.states.LightTankState;
 import ru.mipt.bit.platformer.model.states.TankState;
 import ru.mipt.bit.platformer.physics.Level;
 
-import static com.badlogic.gdx.math.MathUtils.clamp;
-
-public class Tank {
+public class Tank implements LivingGameObject {
     private TankState state;
 
     private final float baseMovementSpeed;
@@ -39,6 +37,11 @@ public class Tank {
 
     public float getBaseMovementSpeed() {
         return baseMovementSpeed;
+    }
+
+    @Override
+    public int getHealth() {
+        return state.getHealth();
     }
 
     public void takeDamage() {

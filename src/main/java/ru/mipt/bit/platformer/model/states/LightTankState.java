@@ -10,6 +10,8 @@ public class LightTankState implements TankState {
     private final Tank tank;
     private final Level level;
 
+    private static final int HEALTH = 3;
+
     public LightTankState(Tank tank, Level level) {
         this.tank = tank;
         this.level = level;
@@ -28,5 +30,10 @@ public class LightTankState implements TankState {
 
     public void takeDamage() {
         tank.setState(new MediumTankState(tank, level));
+    }
+
+    @Override
+    public int getHealth() {
+        return HEALTH;
     }
 }

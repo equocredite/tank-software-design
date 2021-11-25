@@ -6,4 +6,6 @@ public interface TankState {
     void shoot();
 
     void takeDamage();
+
+    int getHealth();
 }
