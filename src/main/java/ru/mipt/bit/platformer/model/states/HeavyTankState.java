@@ -5,6 +5,10 @@ import ru.mipt.bit.platformer.physics.Level;
 
 import static com.badlogic.gdx.math.MathUtils.clamp;
 
+/**
+ * use-case
+ */
+
 public class HeavyTankState implements TankState {
     private static final int HEALTH = 1;
 

@@ -3,6 +3,9 @@ package ru.mipt.bit.platformer.physics;
 import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.model.Tank;
 
+/**
+ * entity
+ */
 
 public class CollisionManager {
     private final Level level;

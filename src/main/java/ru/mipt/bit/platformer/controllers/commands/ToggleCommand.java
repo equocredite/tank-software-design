@@ -2,6 +2,10 @@ package ru.mipt.bit.platformer.controllers.commands;
 
 import ru.mipt.bit.platformer.graphics.ToggleListener;
 
+/**
+ * use-case
+ */
+
 public class ToggleCommand implements Command {
     private final ToggleListener listener;
 

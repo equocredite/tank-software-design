@@ -3,6 +3,10 @@ package ru.mipt.bit.platformer.controllers.commands;
 import ru.mipt.bit.platformer.model.Direction;
 import ru.mipt.bit.platformer.model.Tank;
 
+/**
+ * use-case
+ */
+
 public class MoveCommand implements Command {
     private final Tank tank;
     private final Direction direction;

@@ -2,6 +2,10 @@ package ru.mipt.bit.platformer.model;
 
 import com.badlogic.gdx.math.GridPoint2;
 
+/**
+ * entity
+ */
+
 public enum Direction {
     RIGHT(0f, new GridPoint2(1, 0)),
     UP(90f, new GridPoint2(0, 1)),

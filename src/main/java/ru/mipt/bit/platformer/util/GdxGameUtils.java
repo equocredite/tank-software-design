@@ -15,6 +15,10 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.NoSuchElementException;
 
+/**
+ * driving adapter
+ */
+
 public final class GdxGameUtils {
 
     private GdxGameUtils() {

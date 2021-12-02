@@ -2,6 +2,10 @@ package ru.mipt.bit.platformer.events;
 
 import java.util.Collection;
 
+/**
+ * entity
+ */
+
 public interface Publisher {
     void subscribe(Subscriber subscriber, EventType eventType);
 

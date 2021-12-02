@@ -7,6 +7,10 @@ import com.badlogic.gdx.math.Rectangle;
 
 import static ru.mipt.bit.platformer.util.GdxGameUtils.moveRectangleAtTileCenter;
 
+/**
+ * driving adapter
+ */
+
 public class TileMovement {
 
     private final TiledMapTileLayer tileLayer;

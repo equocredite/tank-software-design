@@ -1,5 +1,9 @@
 package ru.mipt.bit.platformer.events;
 
+/**
+ * entity
+ */
+
 public class SubscriptionRequest {
     private final EventType eventType;
     private final Subscriber subscriber;

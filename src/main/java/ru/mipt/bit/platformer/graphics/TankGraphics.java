@@ -9,6 +9,10 @@ import ru.mipt.bit.platformer.util.TileMovement;
 
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
+/**
+ * use-case
+ */
+
 public class TankGraphics implements LivingGameObjectGraphics {
     private final TextureRegion region;
     private final Rectangle rectangle;

@@ -26,6 +26,10 @@ import java.util.stream.Collectors;
 
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
+/**
+ * input port
+ */
+
 public class GameDesktopLauncher implements ApplicationListener {
     private final LevelGenerator levelGenerator;
 

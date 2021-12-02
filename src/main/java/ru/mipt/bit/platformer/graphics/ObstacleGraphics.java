@@ -15,6 +15,10 @@ import static ru.mipt.bit.platformer.util.GdxGameUtils.createBoundingRectangle;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.drawTextureRegionUnscaled;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.moveRectangleAtTileCenter;
 
+/**
+ * use-case
+ */
+
 public class ObstacleGraphics implements Disposable {
     private final TiledMapTileLayer tileLayer;
     private final TextureRegion region;

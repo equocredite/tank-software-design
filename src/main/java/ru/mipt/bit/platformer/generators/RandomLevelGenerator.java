@@ -14,6 +14,10 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * use-case
+ */
+
 public class RandomLevelGenerator implements LevelGenerator {
     private final int height;
     private final int width;

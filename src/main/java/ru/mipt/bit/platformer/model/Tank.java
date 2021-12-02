@@ -5,6 +5,10 @@ import ru.mipt.bit.platformer.model.states.LightTankState;
 import ru.mipt.bit.platformer.model.states.TankState;
 import ru.mipt.bit.platformer.physics.Level;
 
+/**
+ * entity
+ */
+
 public class Tank implements LivingGameObject {
     private TankState state;
 

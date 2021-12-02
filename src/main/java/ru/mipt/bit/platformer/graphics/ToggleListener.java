@@ -1,5 +1,9 @@
 package ru.mipt.bit.platformer.graphics;
 
+/**
+ * driving port
+ */
+
 public class ToggleListener {
     private boolean enabled = false;
 

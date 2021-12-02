@@ -21,6 +21,10 @@ import java.util.List;
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.createSingleLayerMapRenderer;
 
+/**
+ * use-case
+ */
+
 public class LevelRenderer implements Subscriber, Disposable {
     private final Batch batch;
     private final TiledMap map;

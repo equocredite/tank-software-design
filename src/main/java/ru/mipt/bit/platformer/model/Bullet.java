@@ -5,6 +5,10 @@ import ru.mipt.bit.platformer.physics.Level;
 
 import static com.badlogic.gdx.math.MathUtils.clamp;
 
+/**
+ * entity
+ */
+
 public class Bullet {
     private final int damage = 1;
     private final float movementSpeed = 0.2f;

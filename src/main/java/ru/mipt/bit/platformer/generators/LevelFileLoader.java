@@ -14,6 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * use-case
+ */
+
 public class LevelFileLoader implements LevelGenerator {
     private static final char PLAYER_SYMBOL = 'P';
     private static final char BOT_SYMBOL = 'B';

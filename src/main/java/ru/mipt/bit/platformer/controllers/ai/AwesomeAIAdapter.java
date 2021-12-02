@@ -20,6 +20,10 @@ import ru.mipt.bit.platformer.physics.Level;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * driven adapter
+ */
+
 public class AwesomeAIAdapter implements Controller {
     private final AI ai;
     private final Level level;

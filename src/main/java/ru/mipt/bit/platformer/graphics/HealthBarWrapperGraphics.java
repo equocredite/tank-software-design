@@ -3,6 +3,10 @@ package ru.mipt.bit.platformer.graphics;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import ru.mipt.bit.platformer.model.LivingGameObject;
 
+/**
+ * use-case
+ */
+
 public class HealthBarWrapperGraphics implements LivingGameObjectGraphics {
     private final LivingGameObjectGraphics wrappee;
     private final ToggleListener toggleListener;

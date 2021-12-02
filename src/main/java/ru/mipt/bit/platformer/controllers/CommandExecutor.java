@@ -3,6 +3,10 @@ package ru.mipt.bit.platformer.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * entity
+ */
+
 public class CommandExecutor {
     private final List<Controller> controllers;
 

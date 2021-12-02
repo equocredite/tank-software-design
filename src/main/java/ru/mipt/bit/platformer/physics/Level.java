@@ -9,6 +9,10 @@ import ru.mipt.bit.platformer.model.Tank;
 
 import java.util.*;
 
+/**
+ * entity
+ */
+
 public class Level implements Publisher {
     private Tank player;
     private final List<Tank> bots = new ArrayList<>();

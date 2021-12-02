@@ -9,6 +9,10 @@ import ru.mipt.bit.platformer.model.Tank;
 
 import java.util.List;
 
+/**
+ * use-case / input port
+ */
+
 public class PlayerKeyboardController implements Controller {
     private final Tank player;
     private final ToggleListener toggleListener;
