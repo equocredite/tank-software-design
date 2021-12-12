@@ -3,9 +3,9 @@ package ru.mipt.bit.platformer.graphics;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Disposable;
 import ru.mipt.bit.platformer.model.Obstacle;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import static ru.mipt.bit.platformer.util.GdxGameUtils.createBoundingRectangle;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.drawTextureRegionUnscaled;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.moveRectangleAtTileCenter;
 
-public class ObstacleGraphics implements Disposable {
+public class ObstacleGraphics implements Graphics {
     private final TiledMapTileLayer tileLayer;
     private final TextureRegion region;
     private final List<Rectangle> rectangles = new ArrayList<>();
@@ -38,9 +38,22 @@ public class ObstacleGraphics implements Disposable {
         region.getTexture().dispose();
     }
 
+    @Override
+    public void move() {
+    }
+
     public void draw(Batch batch) {
         for (int i = 0; i < obstacles.size(); ++i) {
             drawTextureRegionUnscaled(batch, region, rectangles.get(i), obstacles.get(i).getRotation());
         }
+    }
+
+    @Override
+    public void drawShape(ShapeRenderer shapeRenderer) {
+    }
+
+    @Override
+    public Object getDrawnObject() {
+        return null;
     }
 }

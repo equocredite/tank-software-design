@@ -1,8 +1,8 @@
 package ru.mipt.bit.platformer.graphics;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import ru.mipt.bit.platformer.model.Tank;
 import ru.mipt.bit.platformer.util.TileMovement;
@@ -15,9 +15,9 @@ public class TankGraphics implements LivingGameObjectGraphics {
     private final Tank tank;
     private final TileMovement tileMovement;
 
-    public TankGraphics(Texture texture, Tank tank, TileMovement tileMovement) {
-        this.region = new TextureRegion(texture);
-        this.rectangle = createBoundingRectangle(region);
+    public TankGraphics(TextureRegion region, Rectangle rectangle, Tank tank, TileMovement tileMovement) {
+        this.region = region;
+        this.rectangle = rectangle;
         this.tank = tank;
         this.tileMovement = tileMovement;
     }
@@ -36,6 +36,10 @@ public class TankGraphics implements LivingGameObjectGraphics {
     @Override
     public void draw(Batch batch) {
         drawTextureRegionUnscaled(batch, region, rectangle, tank.getRotation());
+    }
+
+    @Override
+    public void drawShape(ShapeRenderer shapeRenderer) {
     }
 
     @Override

@@ -7,6 +7,7 @@ import ru.mipt.bit.platformer.physics.Level;
 
 public class Tank implements LivingGameObject {
     private TankState state;
+    private final int maxHealth;
 
     private final float baseMovementSpeed;
     // player current position coordinates on level 10x8 grid (e.g. x=0, y=1)
@@ -20,6 +21,7 @@ public class Tank implements LivingGameObject {
 
     public Tank(GridPoint2 coordinates, float baseMovementSpeed, Direction direction, Level level) {
         this.state = new LightTankState(this, level);
+        this.maxHealth = state.getHealth();
         this.coordinates = coordinates;
         this.destinationCoordinates = coordinates;
         this.baseMovementSpeed = baseMovementSpeed;
@@ -42,6 +44,11 @@ public class Tank implements LivingGameObject {
     @Override
     public int getHealth() {
         return state.getHealth();
+    }
+
+    @Override
+    public int getMaxHealth() {
+        return maxHealth;
     }
 
     public void takeDamage() {

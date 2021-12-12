@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.MapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -19,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
+import static ru.mipt.bit.platformer.util.GdxGameUtils.createBoundingRectangle;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.createSingleLayerMapRenderer;
 
 public class LevelRenderer implements Subscriber, Disposable {
@@ -28,12 +31,14 @@ public class LevelRenderer implements Subscriber, Disposable {
     private final TileMovement tileMovement;
     private final TiledMapTileLayer tileLayer;
 
+    private final ShapeRenderer shapeRenderer = new ShapeRenderer();
+
     private final Texture tankTexture;
     private final Texture bulletTexture;
 
-    private final List<TankGraphics> tankGraphics = new ArrayList<>();
+    private final List<Graphics> graphics = new ArrayList<>();
+
     private final ObstacleGraphics obstacleGraphics;
-    private final List<BulletGraphics> bulletGraphics = new ArrayList<>();
 
     private final ToggleListener toggleListener;
 
@@ -48,42 +53,29 @@ public class LevelRenderer implements Subscriber, Disposable {
         this.tankTexture = tankTexture;
         this.bulletTexture = bulletTexture;
 
-        this.obstacleGraphics = new ObstacleGraphics(obstacleTexture, tileLayer);
+        obstacleGraphics = new ObstacleGraphics(obstacleTexture, tileLayer);
+        graphics.add(obstacleGraphics);
 
         this.toggleListener = toggleListener;
     }
 
     public void render() {
         clearScreen();
-        for (var graphics : tankGraphics) {
-            graphics.move();
-        }
-        for (var graphics : bulletGraphics) {
-            graphics.move();
-        }
+        graphics.forEach(Graphics::move);
         mapRenderer.render();
         batch.begin();
-        for (var graphics : tankGraphics) {
-            graphics.draw(batch);
-        }
-        for (var graphics : bulletGraphics) {
-            graphics.draw(batch);
-        }
-        obstacleGraphics.draw(batch);
+        graphics.forEach(graphics -> graphics.draw(batch));
         batch.end();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        graphics.forEach(graphics -> graphics.drawShape(shapeRenderer));
+        shapeRenderer.end();
     }
 
     @Override
     public void dispose() {
         batch.dispose();
         map.dispose();
-        for (var graphics : tankGraphics) {
-            graphics.dispose();
-        }
-        for (var graphics : bulletGraphics) {
-            graphics.dispose();
-        }
-        obstacleGraphics.dispose();
+        graphics.forEach(Graphics::dispose);
     }
 
     @Override
@@ -107,11 +99,15 @@ public class LevelRenderer implements Subscriber, Disposable {
     }
 
     private void addTank(Tank tank) {
-        tankGraphics.add(new TankGraphics(tankTexture, tank, tileMovement));
+        var region = new TextureRegion(tankTexture);
+        var rectangle = createBoundingRectangle(region);
+        graphics.add(new HealthBarWrapperGraphics(new TankGraphics(region, rectangle, tank, tileMovement),
+                toggleListener, shapeRenderer, rectangle, tankTexture.getWidth() * 0.25f,
+                tankTexture.getHeight() * 0.75f));
     }
 
     private void removeTank(Tank tank) {
-        tankGraphics.removeIf(graphics -> graphics.getDrawnObject() == tank);
+        graphics.removeIf(graphics -> graphics.getDrawnObject() == tank);
     }
 
     private void addObstacle(Obstacle obstacle) {
@@ -119,11 +115,11 @@ public class LevelRenderer implements Subscriber, Disposable {
     }
 
     private void addBullet(Bullet bullet) {
-        bulletGraphics.add(new BulletGraphics(bulletTexture, bullet, tileMovement, tileLayer));
+        graphics.add(new BulletGraphics(bulletTexture, bullet, tileMovement, tileLayer));
     }
 
     private void removeBullet(Bullet bullet) {
-        bulletGraphics.removeIf(graphics -> graphics.getDrawnObject() == bullet);
+        graphics.removeIf(graphics -> graphics.getDrawnObject() == bullet);
     }
 
     private void clearScreen() {

@@ -3,15 +3,15 @@ package ru.mipt.bit.platformer.graphics;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Disposable;
 import ru.mipt.bit.platformer.model.Bullet;
 import ru.mipt.bit.platformer.util.TileMovement;
 
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
-public class BulletGraphics implements Disposable {
+public class BulletGraphics implements Graphics {
     private final TextureRegion region;
     private final Rectangle rectangle;
     private final Bullet bullet;
@@ -42,5 +42,9 @@ public class BulletGraphics implements Disposable {
 
     public void draw(Batch batch) {
         drawTextureRegionUnscaled(batch, region, rectangle, 0f);
+    }
+
+    @Override
+    public void drawShape(ShapeRenderer shapeRenderer) {
     }
 }
