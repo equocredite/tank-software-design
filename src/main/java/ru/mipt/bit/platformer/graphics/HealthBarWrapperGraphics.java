@@ -34,9 +34,9 @@ public class HealthBarWrapperGraphics implements LivingGameObjectGraphics {
     public void drawShape(ShapeRenderer shapeRenderer) {
         if (toggleListener.isEnabled()) {
             shapeRenderer.setColor(Color.RED);
-            var healthBarHeight = baseHealthBarHeight * getDrawnObject().getHealth() / getDrawnObject().getMaxHealth();
-            System.out.println(healthBarHeight);
-            shapeRenderer.rect(rectangle.x + healthBarWidth, rectangle.y + healthBarHeight, 50, 10);
+            var healthFractionRemaining = 1.0f * getDrawnObject().getHealth() / getDrawnObject().getMaxHealth();
+            shapeRenderer.rect(rectangle.x + healthBarWidth, rectangle.y + baseHealthBarHeight,
+                    50f * healthFractionRemaining, 10);
         }
     }
 
